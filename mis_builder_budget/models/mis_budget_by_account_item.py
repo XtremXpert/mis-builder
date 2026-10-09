@@ -26,6 +26,7 @@ class MisBudgetByAccountItem(models.Model):
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
+        string="Company",
         default=lambda self: self.env.company,
         required=True,
     )
@@ -38,6 +39,7 @@ class MisBudgetByAccountItem(models.Model):
     )
     account_id = fields.Many2one(
         comodel_name="account.account",
+        string="Account",
         required=True,
         check_company=True,
     )
