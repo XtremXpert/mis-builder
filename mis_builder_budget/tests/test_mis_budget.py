@@ -107,7 +107,7 @@ class TestMisBudget(TransactionCase):
             )
         )
         # clear cache to force re-read of kpis ordered by sequence
-        cls.env.clear()
+        cls.env.invalidate_all()
 
     def test1(self):
         matrix = self.instance._compute_matrix()
