@@ -4,6 +4,8 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 
+from typing import ClassVar
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
@@ -57,11 +59,17 @@ class MisReportKpiStyle(models.Model):
                     self.env._("Indent level must be greater than or equal to 0")
                 )
 
-    _font_style_selection = [("normal", "Normal"), ("italic", "Italic")]
+    _font_style_selection: ClassVar[list[tuple[str, str]]] = [
+        ("normal", "Normal"),
+        ("italic", "Italic"),
+    ]
 
-    _font_weight_selection = [("nornal", "Normal"), ("bold", "Bold")]
+    _font_weight_selection: ClassVar[list[tuple[str, str]]] = [
+        ("nornal", "Normal"),
+        ("bold", "Bold"),
+    ]
 
-    _font_size_selection = [
+    _font_size_selection: ClassVar[list[tuple[str, str]]] = [
         ("medium", "medium"),
         ("xx-small", "xx-small"),
         ("x-small", "x-small"),
@@ -71,7 +79,7 @@ class MisReportKpiStyle(models.Model):
         ("xx-large", "xx-large"),
     ]
 
-    _font_size_to_xlsx_size = {
+    _font_size_to_xlsx_size: ClassVar[dict[str, int]] = {
         "medium": 11,
         "xx-small": 5,
         "x-small": 7,

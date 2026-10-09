@@ -1,5 +1,4 @@
-/** @odoo-module **/
-// Portage Odoo 20 / Owl 3 : props via useProps, état via proxy.
+// Odoo 20 / Owl 3 port: props through useProps, state through proxy.
 import {Component, proxy, t, useProps} from "@odoo/owl";
 import {Dialog} from "@web/core/dialog/dialog";
 

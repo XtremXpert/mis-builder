@@ -1,16 +1,16 @@
-// Portage Odoo 20 / Owl 3 : proxy au lieu de useState, useSubEnv via la couche
-// de compatibilité, props de champ déclarées avec useProps.
+// Odoo 20 / Owl 3 port: proxy instead of useState, useSubEnv through the
+// compatibility layer, field props declared with useProps.
 import {Component, onMounted, onWillStart, proxy, useProps} from "@odoo/owl";
-import {useSubEnv} from "@web/owl2/utils";
-import {standardFieldProps} from "@web/views/fields/standard_field_props";
 import {useBus, useService} from "@web/core/utils/hooks";
+import {AnnotationDialog} from "../annotation_dialog/annotation_dialog.esm";
 import {DateTimeInput} from "@web/core/datetime/datetime_input";
 import {SearchBar} from "@web/search/search_bar/search_bar";
 import {SearchModel} from "@web/search/search_model";
+import {_t} from "@web/core/l10n/translation";
 import {parseDate} from "@web/core/l10n/dates";
 import {registry} from "@web/core/registry";
-import {AnnotationDialog} from "../annotation_dialog/annotation_dialog.esm";
-import {_t} from "@web/core/l10n/translation";
+import {standardFieldProps} from "@web/views/fields/standard_field_props";
+import {useSubEnv} from "@web/owl2/utils";
 
 export class MisReportWidget extends Component {
     static template = "mis_builder.MisReportWidget";
@@ -254,10 +254,11 @@ export class MisReportWidget extends Component {
             this.wide_display
         );
         var button_resize_element = document.getElementById("icon_resize");
-        button_resize_element.dataset.icon = this.wide_display ? "close_fullscreen" : "open_in_full";
+        button_resize_element.dataset.icon = this.wide_display
+            ? "close_fullscreen"
+            : "open_in_full";
     }
 }
-
 
 export const misReportWidget = {
     component: MisReportWidget,

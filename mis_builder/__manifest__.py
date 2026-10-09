@@ -5,9 +5,7 @@
     "name": "MIS Builder",
     "version": "20.0.1.0.1",
     "category": "Reporting",
-    "summary": """
-        Build 'Management Information System' Reports and Dashboards
-    """,
+    "summary": "Build 'Management Information System' Reports and Dashboards",
     "author": "ACSONE SA/NV, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/mis-builder",
     "depends": [

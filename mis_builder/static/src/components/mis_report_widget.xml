@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="mis_builder.MisReportWidget">
         <div class="oe_mis_builder_content">
@@ -9,8 +9,15 @@
                     <div class="oe_mis_builder_cp_right">
                         <div class="oe_mis_builder_cp_right_top_right">
                             <div class="oe_mis_builder_action_buttons">
-                                <button t-on-click="this.toggle_wide_display" class="btn">
-                                    <span id="icon_resize" class="oi" data-icon="open_in_full" />
+                                <button
+                                    t-on-click="this.toggle_wide_display"
+                                    class="btn"
+                                >
+                                    <span
+                                        id="icon_resize"
+                                        class="oi"
+                                        data-icon="open_in_full"
+                                    />
                                 </button>
                             </div>
                         </div>
@@ -29,17 +36,29 @@
                             </div>
                             <div class="oe_mis_builder_action_buttons">
                                 <button t-on-click="this.refresh" class="btn">
-                                    <span class="oi" data-icon="refresh" /> Refresh </button>
+                                    <span
+                                    class="oi"
+                                    data-icon="refresh"
+                                /> Refresh </button>
                                 <button t-on-click="this.printPdf" class="btn">
-                                    <span class="oi" data-icon="print" /> Print </button>
+                                    <span
+                                    class="oi"
+                                    data-icon="print"
+                                /> Print </button>
                                 <button t-on-click="this.exportXls" class="btn">
-                                    <span class="oi" data-icon="download" /> Export </button>
+                                    <span
+                                    class="oi"
+                                    data-icon="download"
+                                /> Export </button>
                                 <button
-                                    t-on-click="this.displaySettings"
                                     t-if="this.widget_show_settings_button"
                                     class="btn"
+                                    t-on-click="this.displaySettings"
                                 >
-                                    <span class="oi" data-icon="settings" /> Settings </button>
+                                    <span
+                                    class="oi"
+                                    data-icon="settings"
+                                /> Settings </button>
                             </div>
                         </div>
                     </div>
@@ -118,8 +137,8 @@
 
                                         <div id="dropdown_menu" class="btn-group">
                                             <div
-                                                class="dropdown"
                                                 t-if="this.state.can_edit_annotation and cell.can_be_annotated"
+                                                class="dropdown"
                                             >
                                                 <div
                                                     data-bs-toggle="dropdown"
@@ -157,7 +176,7 @@
                     </table>
                 </div>
                 <!-- Table with notes -->
-                <div class="oe_mis_builder_footnote_div" id="footnotes">
+                <div id="footnotes" class="oe_mis_builder_footnote_div">
                     <table class="oe_mis_builder_footnote_table">
                         <t
                             t-foreach="this.state.mis_report_data.notes"
@@ -174,11 +193,12 @@
                                 </td>
                                 <td>
                                     <i
+                                        t-if="this.state.can_edit_annotation"
+                                        class="btn oi"
                                         href="javascript:void(0)"
                                         t-on-click="this.remove_annotation"
                                         t-att-data-cell-id="cell_id"
-                                        class="btn oi" data-icon="delete"
-                                        t-if="this.state.can_edit_annotation"
+                                        data-icon="delete"
                                     />
                                 </td>
                             </tr>

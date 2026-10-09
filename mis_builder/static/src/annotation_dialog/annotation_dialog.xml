@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="mis_builder.AnnotationDialog">
         <Dialog title="this.props.title" size="'md'">
@@ -9,11 +9,14 @@
                 t-model="this.state.annotationText"
             />
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="this.confirm">Confirm</button>
                 <button
+                    class="btn btn-primary"
+                    t-on-click="this.confirm"
+                >Confirm</button>
+                <button
+                    t-if="this.props.canRemove"
                     class="btn btn-secondary"
                     t-on-click="this.remove"
-                    t-if="this.props.canRemove"
                 >Remove</button>
                 <button
                     class="btn btn-secondary"
