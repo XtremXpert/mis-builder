@@ -206,6 +206,7 @@ class MisReportInstancePeriod(models.Model):
     )
     date_range_type_id = fields.Many2one(
         comodel_name="date.range.type",
+        string="Date Range Type",
         domain=[("allow_overlap", "=", False)],
     )
     offset = fields.Integer(help="Offset from current period", default=-1)
@@ -214,11 +215,12 @@ class MisReportInstancePeriod(models.Model):
     date_to = fields.Date(compute="_compute_dates", string="To (computed)")
     manual_date_from = fields.Date(string="From")
     manual_date_to = fields.Date(string="To")
-    date_range_id = fields.Many2one(comodel_name="date.range")
+    date_range_id = fields.Many2one(comodel_name="date.range", string="Date Range")
     valid = fields.Boolean(compute="_compute_dates", type="boolean")
     sequence = fields.Integer(default=100)
     report_instance_id = fields.Many2one(
         comodel_name="mis.report.instance",
+        string="Report Instance",
         required=True,
         ondelete="cascade",
     )
@@ -499,7 +501,7 @@ class MisReportInstance(models.Model):
         string="Base date", help="Report base date (leave empty to use current date)"
     )
     pivot_date = fields.Date(compute="_compute_pivot_date")
-    report_id = fields.Many2one("mis.report", required=True)
+    report_id = fields.Many2one("mis.report", required=True, string="Report")
     period_ids = fields.One2many(
         comodel_name="mis.report.instance.period",
         inverse_name="report_instance_id",
@@ -537,6 +539,7 @@ class MisReportInstance(models.Model):
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
+        string="Currency",
         help="Select target currency for the report. "
         "Required if companies have different currencies.",
         required=False,
@@ -549,7 +552,7 @@ class MisReportInstance(models.Model):
     comparison_mode = fields.Boolean(
         compute="_compute_comparison_mode", inverse="_inverse_comparison_mode"
     )
-    date_range_id = fields.Many2one(comodel_name="date.range")
+    date_range_id = fields.Many2one(comodel_name="date.range", string="Date Range")
     date_from = fields.Date(string="From")
     date_to = fields.Date(string="To")
     temporary = fields.Boolean(default=False)
@@ -778,6 +781,7 @@ class MisReportInstance(models.Model):
             "res_model": "mis.report.instance",
             "res_id": self.id,
             "view_mode": "form",
+            "views": [(view_id.id, "form")],  # requis par Odoo 20
             "view_id": view_id.id,
             "target": "current",
             "context": self.env.context,
@@ -792,6 +796,7 @@ class MisReportInstance(models.Model):
         )
 
     def export_xls(self):
+        self.ensure_one()
         return self.env.ref("mis_builder.xls_export").report_action(
             self, data=dict(dummy=True)
         )  # required to propagate context
@@ -1022,11 +1027,4 @@ class MisReportInstance(models.Model):
     def _compute_user_can_edit_annotation(self):
         self.user_can_edit_annotation = self.env.user.has_group(
             "mis_builder.group_edit_annotation"
-        )
-
-    def _get_xlsx_report_name(self):
-        self.ensure_one()
-        return "{} - {}".format(
-            self.name,
-            ", ".join([a.name for a in self.query_company_ids]),
         )

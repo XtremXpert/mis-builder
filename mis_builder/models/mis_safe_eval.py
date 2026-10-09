@@ -3,11 +3,11 @@
 
 import traceback
 
+from odoo.tools.safe_eval.evaluation import compile_codeobj
 from odoo.tools.safe_eval import (
     _BUILTINS,
     _SAFE_OPCODES,
     assert_valid_codeobj,
-    compile_codeobj,
 )
 
 from .data_error import DataError, NameDataError

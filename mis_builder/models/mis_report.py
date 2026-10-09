@@ -84,7 +84,7 @@ class MisReportKpi(models.Model):
     _name = "mis.report.kpi"
     _description = "MIS Report KPI"
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, copy=True)  # Odoo 20 : pas de suffixe (copy)
     description = fields.Char(required=True, translate=True)
     multi = fields.Boolean()
     expression = fields.Char(
@@ -103,7 +103,9 @@ class MisReportKpi(models.Model):
         comodel_name="mis.report.style",
         required=False,
     )
-    style_id = fields.Many2one(comodel_name="mis.report.style", required=False)
+    style_id = fields.Many2one(
+        string="Style", comodel_name="mis.report.style", required=False
+    )
     style_expression = fields.Char(
         help="An expression that returns a style depending on the KPI value. "
         "Such style is applied on top of the row style.",
@@ -254,7 +256,7 @@ class MisReportSubkpi(models.Model):
     report_id = fields.Many2one(
         comodel_name="mis.report", required=True, ondelete="cascade"
     )
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, copy=True)  # Odoo 20 : pas de suffixe (copy)
     description = fields.Char(required=True, translate=True)
     expression_ids = fields.One2many("mis.report.kpi.expression", "subkpi_id")
 
@@ -351,7 +353,7 @@ class MisReportQuery(models.Model):
             field_names = [field.name for field in record.field_ids]
             record.field_names = ", ".join(field_names)
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, copy=True)  # Odoo 20 : pas de suffixe (copy)
     model_id = fields.Many2one("ir.model", required=True, ondelete="cascade")
     field_ids = fields.Many2many(
         "ir.model.fields", required=True, string="Fields to fetch"
@@ -420,7 +422,7 @@ class MisReport(models.Model):
 
     name = fields.Char(required=True, translate=True)
     description = fields.Char(required=False, translate=True)
-    style_id = fields.Many2one(comodel_name="mis.report.style")
+    style_id = fields.Many2one(string="Style", comodel_name="mis.report.style")
     query_ids = fields.One2many(
         "mis.report.query", "report_id", string="Queries", copy=True
     )

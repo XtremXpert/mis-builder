@@ -1,20 +1,22 @@
-import {Component, useState} from "@odoo/owl";
+/** @odoo-module **/
+// Portage Odoo 20 / Owl 3 : props via useProps, état via proxy.
+import {Component, proxy, t, useProps} from "@odoo/owl";
 import {Dialog} from "@web/core/dialog/dialog";
 
 export class AnnotationDialog extends Component {
     static components = {Dialog};
-    static props = {
-        close: Function,
-        annotationText: {type: String},
-        confirm: {type: Function},
-        title: {type: String},
-        remove: {type: Function},
-        canRemove: {type: Boolean},
-    };
     static template = "mis_builder.AnnotationDialog";
+    props = useProps({
+        close: t.function(),
+        annotationText: t.string(),
+        confirm: t.function(),
+        title: t.string(),
+        remove: t.function(),
+        canRemove: t.boolean(),
+    });
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             annotationText: this.props.annotationText,
         });
     }

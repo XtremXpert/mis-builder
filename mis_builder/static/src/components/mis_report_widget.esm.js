@@ -1,4 +1,8 @@
-import {Component, onMounted, onWillStart, useState, useSubEnv} from "@odoo/owl";
+// Portage Odoo 20 / Owl 3 : proxy au lieu de useState, useSubEnv via la couche
+// de compatibilité, props de champ déclarées avec useProps.
+import {Component, onMounted, onWillStart, proxy, useProps} from "@odoo/owl";
+import {useSubEnv} from "@web/owl2/utils";
+import {standardFieldProps} from "@web/views/fields/standard_field_props";
 import {useBus, useService} from "@web/core/utils/hooks";
 import {DateTimeInput} from "@web/core/datetime/datetime_input";
 import {SearchBar} from "@web/search/search_bar/search_bar";
@@ -9,6 +13,10 @@ import {AnnotationDialog} from "../annotation_dialog/annotation_dialog.esm";
 import {_t} from "@web/core/l10n/translation";
 
 export class MisReportWidget extends Component {
+    static template = "mis_builder.MisReportWidget";
+    static components = {SearchBar, DateTimeInput};
+    props = useProps({...standardFieldProps});
+
     setup() {
         super.setup();
         this.orm = useService("orm");
@@ -16,7 +24,7 @@ export class MisReportWidget extends Component {
         this.view = useService("view");
         this.dialog = useService("dialog");
         this.JSON = JSON;
-        this.state = useState({
+        this.state = proxy({
             mis_report_data: {header: [], body: [], notes: {}},
             pivot_date: null,
             can_edit_annotation: false,
@@ -120,7 +128,6 @@ export class MisReportWidget extends Component {
 
     get context() {
         return {
-            ...super.context,
             ...(this.showSearchBar && {
                 mis_analytic_domain: this.searchModel.searchDomain,
             }),
@@ -247,13 +254,10 @@ export class MisReportWidget extends Component {
             this.wide_display
         );
         var button_resize_element = document.getElementById("icon_resize");
-        button_resize_element.classList.toggle("fa-expand", !this.wide_display);
-        button_resize_element.classList.toggle("fa-compress", this.wide_display);
+        button_resize_element.dataset.icon = this.wide_display ? "close_fullscreen" : "open_in_full";
     }
 }
 
-MisReportWidget.components = {SearchBar, DateTimeInput};
-MisReportWidget.template = "mis_builder.MisReportWidget";
 
 export const misReportWidget = {
     component: MisReportWidget,

@@ -3,7 +3,7 @@
 
 {
     "name": "MIS Builder",
-    "version": "19.0.1.2.1",
+    "version": "20.0.1.0.1",
     "category": "Reporting",
     "summary": """
         Build 'Management Information System' Reports and Dashboards
@@ -23,8 +23,7 @@
         "views/mis_report_instance.xml",
         "views/mis_report_style.xml",
         "datas/ir_cron.xml",
-        "security/ir.model.access.csv",
-        "security/mis_builder_security.xml",
+        "security/ir.access.csv",
         "report/mis_report_instance_qweb.xml",
         "report/mis_report_instance_xlsx.xml",
     ],
@@ -41,7 +40,7 @@
         ],
     },
     "qweb": ["static/src/xml/mis_report_widget.xml"],
-    "installable": False,
+    "installable": True,
     "application": True,
     "license": "AGPL-3",
     "development_status": "Production/Stable",
