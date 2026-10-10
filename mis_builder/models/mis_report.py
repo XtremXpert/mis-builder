@@ -7,9 +7,9 @@ import logging
 import re
 import time
 from collections import defaultdict
+from zoneinfo import ZoneInfo
 
 import dateutil
-import pytz
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -56,10 +56,15 @@ class AutoStruct:
 
 def _utc_midnight(d, tz_name, add_day=0):
     d = fields.Datetime.from_string(d) + datetime.timedelta(days=add_day)
-    utc_tz = pytz.timezone("UTC")
-    context_tz = pytz.timezone(tz_name)
-    local_timestamp = context_tz.localize(d, is_dst=False)
-    return fields.Datetime.to_string(local_timestamp.astimezone(utc_tz))
+    context_tz = ZoneInfo(tz_name)
+    local_timestamp = d.replace(tzinfo=context_tz)
+    if local_timestamp.dst():
+        # prefer standard time for ambiguous local times, like the former
+        # pytz localize(is_dst=False)
+        standard_timestamp = d.replace(tzinfo=context_tz, fold=1)
+        if not standard_timestamp.dst():
+            local_timestamp = standard_timestamp
+    return fields.Datetime.to_string(local_timestamp.astimezone(datetime.timezone.utc))
 
 
 def _python_var(var_str):
@@ -84,7 +89,7 @@ class MisReportKpi(models.Model):
     _name = "mis.report.kpi"
     _description = "MIS Report KPI"
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, copy=True)  # Odoo 20: no " (copy)" suffix
     description = fields.Char(required=True, translate=True)
     multi = fields.Boolean()
     expression = fields.Char(
@@ -145,7 +150,7 @@ class MisReportKpi(models.Model):
 
     _order = "sequence, id"
 
-    _rec_names_search = ["name", "description"]
+    _rec_names_search = ("name", "description")
 
     @api.depends("description", "name")
     def _compute_display_name(self):
@@ -254,7 +259,7 @@ class MisReportSubkpi(models.Model):
     report_id = fields.Many2one(
         comodel_name="mis.report", required=True, ondelete="cascade"
     )
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, copy=True)  # Odoo 20: no " (copy)" suffix
     description = fields.Char(required=True, translate=True)
     expression_ids = fields.One2many("mis.report.kpi.expression", "subkpi_id")
 
@@ -351,7 +356,7 @@ class MisReportQuery(models.Model):
             field_names = [field.name for field in record.field_ids]
             record.field_names = ", ".join(field_names)
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, copy=True)  # Odoo 20: no " (copy)" suffix
     model_id = fields.Many2one("ir.model", required=True, ondelete="cascade")
     field_ids = fields.Many2many(
         "ir.model.fields", required=True, string="Fields to fetch"
@@ -598,7 +603,7 @@ class MisReport(models.Model):
                     ]
                 )
             field_names = [f.name for f in query_sudo.field_ids]
-            all_stored = all([model._fields[f].store for f in field_names])
+            all_stored = all(model._fields[f].store for f in field_names)
             if not query.aggregate:
                 data = model.search_read(domain, field_names)
                 res[query.name] = [AutoStruct(**d) for d in data]
